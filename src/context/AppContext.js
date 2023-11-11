@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { Api } from "../modules/api";
 
 const ToDoContext = createContext({
@@ -88,20 +94,6 @@ export default function ToDoProvider({ children }) {
       });
   };
 
-  const searchData = () => {
-    const url = `?email=${query}`;
-    Api.get(url)
-      .then((res) => {
-        setSearchedToDos(res.data);
-      })
-      .catch((err) => {
-        setState({
-          ...state,
-          error: err.message,
-        });
-      });
-  };
-
   const onDropDownClick = (id) => {
     setDropDownId(id);
     setShowDropDown(!showDropDown);
@@ -119,9 +111,20 @@ export default function ToDoProvider({ children }) {
     getData();
   }, []);
 
-  const MemoisedSearchData = () => useCallback(() => searchData(), []);
-
   useEffect(() => {
+    const searchData = () => {
+      const url = `?email=${query}`;
+      Api.get(url)
+        .then((res) => {
+          setSearchedToDos(res.data);
+        })
+        .catch((err) => {
+          setState({
+            ...state,
+            error: err.message,
+          });
+        });
+    };
     let timerId;
     if (query.length >= 3) {
       if (timerId) {
@@ -129,14 +132,14 @@ export default function ToDoProvider({ children }) {
       }
 
       timerId = setTimeout(() => {
-        MemoisedSearchData();
+        searchData();
       }, 500);
     }
 
     return () => {
       clearTimeout(timerId);
     };
-  }, [query, MemoisedSearchData]);
+  }, [query]);
 
   const ToDoContextValues = {
     loading: state.loading,

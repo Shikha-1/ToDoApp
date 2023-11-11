@@ -1,21 +1,29 @@
 import React, { useRef, useEffect, useCallback } from "react";
+
 function useOutsideAlerter(ref, fn) {
-  useEffect(() => {
-    function handleClickOutside(event) {
+  const handleClickOutside = useCallback(
+    (event) => {
       if (ref.current && !ref.current.contains(event.target)) {
         fn();
       }
-    }
+    },
+    [ref, fn]
+  );
+
+  useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [ref, fn]);
+  }, [handleClickOutside]);
 }
 
 export default function PopUp({ children, onClickOutside }) {
   const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef,  useCallback(() => onClickOutside(), []));
+  useOutsideAlerter(
+    wrapperRef,
+    useCallback(() => onClickOutside(), [])
+  );
 
   return <div ref={wrapperRef}>{children}</div>;
 }
