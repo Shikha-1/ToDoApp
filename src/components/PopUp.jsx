@@ -10,6 +10,7 @@ function useOutsideAlerter(ref, fn) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+    // eslint-disable-line react-hooks/exhaustive-deps
   }, [ref]);
 }
 

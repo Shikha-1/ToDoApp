@@ -139,6 +139,7 @@ export default function ToDoProvider({ children }) {
     return () => {
       clearTimeout(timerId);
     };
+    // eslint-disable-line react-hooks/exhaustive-deps
   }, [query]);
 
   const ToDoContextValues = {
