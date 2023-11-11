@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { Api } from "../modules/api";
 
 const ToDoContext = createContext({
@@ -124,6 +119,8 @@ export default function ToDoProvider({ children }) {
     getData();
   }, []);
 
+  const MemoisedSearchData = () => useCallback(() => searchData(), []);
+
   useEffect(() => {
     let timerId;
     if (query.length >= 3) {
@@ -132,15 +129,14 @@ export default function ToDoProvider({ children }) {
       }
 
       timerId = setTimeout(() => {
-        searchData();
+        MemoisedSearchData();
       }, 500);
     }
 
     return () => {
       clearTimeout(timerId);
     };
-    // eslint-disable-line react-hooks/exhaustive-deps
-  }, [query]);
+  }, [query, MemoisedSearchData]);
 
   const ToDoContextValues = {
     loading: state.loading,

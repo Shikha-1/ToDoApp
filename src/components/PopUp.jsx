@@ -1,17 +1,18 @@
 import React, { useRef, useEffect } from "react";
 function useOutsideAlerter(ref, fn) {
+  const newFn = () => useCallback(() => fn(), []);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (ref.current && !ref.current.contains(event.target)) {
-        fn();
+        newFn();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-    // eslint-disable-line react-hooks/exhaustive-deps
-  }, [ref]);
+  }, [ref, newFn]);
 }
 
 export default function PopUp({ children, onClickOutside }) {
