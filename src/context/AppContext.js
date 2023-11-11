@@ -3,7 +3,6 @@ import React, {
   useContext,
   useState,
   useEffect,
-  useCallback,
 } from "react";
 import { Api } from "../modules/api";
 
@@ -119,10 +118,7 @@ export default function ToDoProvider({ children }) {
           setSearchedToDos(res.data);
         })
         .catch((err) => {
-          setState({
-            ...state,
-            error: err.message,
-          });
+          console.log(err.message)
         });
     };
     let timerId;

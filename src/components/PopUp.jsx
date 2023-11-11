@@ -20,10 +20,8 @@ function useOutsideAlerter(ref, fn) {
 
 export default function PopUp({ children, onClickOutside }) {
   const wrapperRef = useRef(null);
-  useOutsideAlerter(
-    wrapperRef,
-    useCallback(() => onClickOutside(), [])
-  );
+  const clickOutsideFn = useCallback(() => onClickOutside(), [onClickOutside]);
+  useOutsideAlerter(wrapperRef, clickOutsideFn);
 
   return <div ref={wrapperRef}>{children}</div>;
 }
